@@ -50,6 +50,12 @@
     <Compile Include="Crypto.cs" />
     <Compile Include="DelayedMethodInvoker.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="ExMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExMessageBox.Designer.cs">
+      <DependentUpon>ExMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="InputBox20.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,8 +75,12 @@
     <Compile Include="SearchFormBase20.designer.cs">
       <DependentUpon>SearchFormBase20.cs</DependentUpon>
     </Compile>
+    <Compile Include="ShortcutManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ExMessageBox.resx">
+      <DependentUpon>ExMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InputBox20.resx">
       <DependentUpon>InputBox20.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -79,6 +89,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="../packages/UnmanagedExports.1.2.7/tools/RGiesecke.DllExport.targets" Condition="Exists('../packages/UnmanagedExports.1.2.7/tools/RGiesecke.DllExport.targets')" />

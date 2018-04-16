@@ -88,6 +88,7 @@
     <Compile Include="SearchFormBase.Designer.cs">
       <DependentUpon>SearchFormBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="ShortcutManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExMessageBox.resx">
@@ -112,10 +113,21 @@
   <ItemGroup>
     <None Include="TG.Common.nuspec" />
   </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>REM ---- Begin NuGefy ----
 if "$(ConfigurationName)" == "Release" (
- call "\\nemapps01.domain.nemcomed.com\nuget$\NuGefy\NuGefy.exe" /proj="$(ProjectPath)" /pack /config=Release
+ call "\\nemapps01.avaligntech.dom\nuget$\NuGefy\NuGefy.exe" /proj="$(ProjectPath)" /pack /config=Release
 )
 REM ---- End NuGefy ----
 </PostBuildEvent>
