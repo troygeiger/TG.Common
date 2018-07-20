@@ -128,7 +128,7 @@
   <PropertyGroup>
     <PostBuildEvent>REM ---- Begin NuGefy ----
 if "$(ConfigurationName)" == "Release" (
- call "\\nemapps01.avaligntech.dom\nuget$\NuGefy\NuGefy.exe" /proj="$(ProjectPath)" /pack /config=Release
+ call "\\nemapps01.avaligntech.dom\nuget$\NuGefy\NuGefy.exe" /proj="$(ProjectPath)" /pack /config=Release /confirm
 )
 REM ---- End NuGefy ----
 </PostBuildEvent>

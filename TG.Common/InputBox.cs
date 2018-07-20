@@ -11,6 +11,7 @@ namespace TG.Common
     public partial class InputBox : Form
     {
         Type searchForm = null;
+        bool _allowBlank = false;
 
         /// <summary>
         /// Creates a new instance of <see cref="InputBox"/>.
@@ -79,6 +80,43 @@ namespace TG.Common
         }
 
         /// <summary>
+        /// Get or set whether the value can be blank.
+        /// </summary>
+        public bool AllowBlankValue
+        {
+            get => _allowBlank;
+            set
+            {
+                _allowBlank = value;
+                UpdateOkButton();
+            }
+        }
+
+        /// <summary>
+        /// Get or set whether to accept multi-line text.
+        /// </summary>
+        public bool MultiLine
+        {
+            get => txtValue.Multiline;
+            set
+            {
+                txtValue.Multiline = value;
+                if (value)
+                {
+                    txtValue.Margin = new Padding(3);
+                    this.Height = 320;
+                    this.AcceptButton = null;
+                }
+                else
+                {
+                    txtValue.Margin = new Padding(3, 5, 3, 3);
+                    this.Height = 160;
+                    this.AcceptButton = AcceptButton;
+                }
+            }
+        }
+
+        /// <summary>
         /// A type that is a base type of <see cref="SearchFormBase"/> that an instance will be created when the search button is clicked.
         /// </summary>
         public Type SearchForm
@@ -96,6 +134,9 @@ namespace TG.Common
             }
         }
 
+        /// <summary>
+        /// Get or set if the value should show the password characters.
+        /// </summary>
         public bool IsPassword
         {
             get { return txtValue.UseSystemPasswordChar; }
@@ -104,7 +145,19 @@ namespace TG.Common
 
         private void txtValue_TextChanged(object sender, EventArgs e)
         {
-            btnOk.Enabled = txtValue.TextLength > 0;
+            UpdateOkButton();
+        }
+
+        private void UpdateOkButton()
+        {
+            if (AllowBlankValue)
+            {
+                btnOk.Enabled = true;
+            }
+            else
+            {
+                btnOk.Enabled = txtValue.TextLength > 0;
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
