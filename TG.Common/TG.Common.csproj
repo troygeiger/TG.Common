@@ -90,6 +90,12 @@
       <DependentUpon>SearchFormBase.cs</DependentUpon>
     </Compile>
     <Compile Include="ShortcutManager.cs" />
+    <Compile Include="WaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WaitForm.Designer.cs">
+      <DependentUpon>WaitForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExMessageBox.resx">
@@ -112,7 +118,9 @@
   </Target>
   -->
   <ItemGroup>
-    <None Include="TG.Common.nuspec" />
+    <None Include="TG.Common.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">

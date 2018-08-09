@@ -79,7 +79,7 @@ namespace TG.Common
             {
                 return src;
             }
-            
+
             if (src == null) return GetDefault(destType);
             Type dicType = typeof(IDictionary);
             Type lstType = typeof(IList);
@@ -106,7 +106,7 @@ namespace TG.Common
                         foreach (DictionaryEntry item in srcDic)
                         {
                             destDic.Add(
-                                InnerClone(item.Key.GetType(), item.Key, true), 
+                                InnerClone(item.Key.GetType(), item.Key, true),
                                 InnerClone(item.Value.GetType(), item.Value, true)
                                 );
                         }
@@ -128,7 +128,7 @@ namespace TG.Common
                         foreach (object item in srcLst)
                         {
                             destLst.Add(InnerClone(item.GetType(), item, true));
-                        } 
+                        }
                     }
                     else
                     {
@@ -141,5 +141,51 @@ namespace TG.Common
             }
             return result;
         }
+
+
+#if !NET20
+        public static void ThreadSafeInvoke(Delegate @delegate, System.Threading.Thread destinationThread, params object[] arguments)
+        {
+
+            Delegate[] Dels = @delegate.GetInvocationList();
+            System.ComponentModel.ISynchronizeInvoke Synchronizer = null;
+
+            if (@delegate.Target != null && typeof(System.ComponentModel.ISynchronizeInvoke).IsAssignableFrom(@delegate.Target.GetType()))
+            {
+                Synchronizer = (System.ComponentModel.ISynchronizeInvoke)@delegate.Target;
+            }
+            else if (destinationThread != null)
+            {
+                var dispatcher = System.Windows.Threading.Dispatcher.FromThread(destinationThread);
+                dispatcher.Invoke(@delegate);
+                return;
+            }
+            else
+            {
+                @delegate.DynamicInvoke(arguments);
+                return;
+            }
+
+            foreach (Delegate sync in Dels)
+            {
+                if (Synchronizer != null)
+                {
+                    if (Synchronizer.InvokeRequired)
+                    {
+                        Synchronizer.Invoke(sync, arguments);
+                    }
+                    else
+                    {
+                        sync.DynamicInvoke(arguments);
+                    }
+                }
+                else
+                {
+                    sync.DynamicInvoke(arguments);
+                }
+            }
+
+        } 
+#endif
     }
 }
