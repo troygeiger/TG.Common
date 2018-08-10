@@ -22,7 +22,19 @@ namespace TestApp
         private void button1_Click(object sender, EventArgs e)
         {
             WaitForm.ShowForm("M", this);
-            Thread.Sleep(3000);
+            timer1.Start();
+            //Thread.Sleep(3000);
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            WaitForm.CloseForm();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timer1.Stop();
             WaitForm.CloseForm();
         }
     }

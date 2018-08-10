@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -17,6 +18,7 @@ namespace TG.Common
         static string _message;
         static bool _placeParent;
         static Form _parent;
+        static IntPtr _parentHandle;
         static int _parentRight, _parentBottom, _parentWidth, _parentHeight;
         static Thread _winThread;
         static int _timeout;
@@ -56,31 +58,31 @@ namespace TG.Common
         /// <param name="autoCloseTimeout">The delay, in milliseconds, when the form should close automatically.</param>
         public static void ShowForm(string message, Form parent, int autoCloseTimeout)
         {
-            _message = message;
-            if (parent != null)
+            if (_winThread == null)
             {
-                _parent = parent;
-                _placeParent = true;
-                _parentBottom = _parent.Bottom;
-                _parentRight = _parent.Right;
-                _parentHeight = _parent.Height;
-                _parentWidth = _parent.Width;
-                parent.FormClosing += ParentForm_FormClosing;
-            }
-            _timeout = autoCloseTimeout;
+                _message = message;
+                if (parent != null)
+                {
+                    _parent = parent;
+                    _parentHandle = parent.Handle;
+                    _placeParent = true;
+                    _parentBottom = _parent.Bottom;
+                    _parentRight = _parent.Right;
+                    _parentHeight = _parent.Height;
+                    _parentWidth = _parent.Width;
+                    parent.FormClosing += ParentForm_FormClosing;
+                }
+                _timeout = autoCloseTimeout;
 
-            _winThread = new Thread(new ThreadStart(CreateWindowThread));
-            _winThread.Start();
+                _winThread = new Thread(new ThreadStart(CreateWindowThread));
+                _winThread.Start();
+            }
         }
 
         private static void CreateWindowThread()
         {
-            if (Instance != null)
-            {
-                Instance.lblMessage.Text = _message;
-                return;
-            }
             Instance = new WaitForm();
+
             Instance.lblMessage.Text = _message;
 
             if (_timeout > -1)
@@ -88,12 +90,12 @@ namespace TG.Common
                 Instance.AutoCloseTimer.Interval = _timeout;
                 Instance.AutoCloseTimer.Start();
             }
-            
+
             if (_placeParent)
             {
 
                 Size expectedSize = new Size(375, 100);
-
+                EnableWindow(_parentHandle, false);
                 Instance.StartPosition = FormStartPosition.Manual;
                 Instance.Left = (_parentRight - (_parentWidth / 2)) - (expectedSize.Width / 2);
                 Instance.Top = (_parentBottom - (_parentHeight / 2)) - (expectedSize.Height / 2);
@@ -114,8 +116,13 @@ namespace TG.Common
 
         private static void KillThread()
         {
+            if (_placeParent)
+            {
+                EnableWindow(_parentHandle, true);
+            }
             Instance?.Dispose();
             Instance = null;
+            _winThread = null;
         }
 
         private delegate void VoidAction();
@@ -142,5 +149,12 @@ namespace TG.Common
         {
             KillThread();
         }
+
+        //Import the EnableWindow method
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool EnableWindow(IntPtr hWnd, bool bEnable);
+
+        
     }
 }
