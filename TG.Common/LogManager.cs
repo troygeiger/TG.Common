@@ -144,7 +144,7 @@ namespace TG.Common
         {
             try
             {
-                List<string> files = new List<string>(Directory.GetFiles(logFolder, "*.txt"));
+                List<string> files = new List<string>(Directory.GetFiles(Path.GetDirectoryName(LogPath), "*.txt"));
                 files.Sort((x, y) => {
                     DateTime xd, yd;
                     DateTime.TryParse(Path.GetFileNameWithoutExtension(x), out xd);
