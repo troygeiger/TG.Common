@@ -154,12 +154,14 @@ namespace TG.Common
             {
                 Synchronizer = (System.ComponentModel.ISynchronizeInvoke)@delegate.Target;
             }
+#if NET45
             else if (destinationThread != null)
             {
                 var dispatcher = System.Windows.Threading.Dispatcher.FromThread(destinationThread);
                 dispatcher.Invoke(@delegate);
                 return;
             }
+#endif
             else
             {
                 @delegate.DynamicInvoke(arguments);
@@ -187,5 +189,5 @@ namespace TG.Common
 
         } 
 #endif
+        }
     }
-}

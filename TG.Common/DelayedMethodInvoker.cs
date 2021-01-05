@@ -72,7 +72,7 @@ namespace TG.Common
                     {
                         Synchronizer = (System.ComponentModel.ISynchronizeInvoke)Exe.Target;
                     }
-#if !NET20
+#if NET45
                     else if (ReturnThread != null)
                     {
                         var dispatcher = System.Windows.Threading.Dispatcher.FromThread(ReturnThread);
