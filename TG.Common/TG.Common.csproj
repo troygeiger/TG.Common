@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net20;net45;netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0;</TargetFrameworks>
+    <TargetFrameworks>net20;net45;netstandard2.0;netstandard2.1;netcoreapp3.1;net6.0-windows;</TargetFrameworks>
     <RootNamespace>TG.Common</RootNamespace>
     <AssemblyName>TG.Common</AssemblyName>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <Version>1.2.1.0</Version>
+    <Version>1.2.2.0</Version>
     <Description>A small library of useful methods.</Description>
     <Copyright>Copyright © Troy Geiger 2021</Copyright>
     <Authors>Troy Geiger</Authors>
@@ -21,6 +21,9 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net20' or '$(TargetFramework)' == 'net45'">
     <DefineConstants>WINFORM</DefineConstants>
   </PropertyGroup>
+	<PropertyGroup Condition="$(TargetFramework.EndsWith('-windows'))">
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
   <ItemGroup Condition="$(DefineConstants.Contains('WINFORM'))">
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -50,7 +53,7 @@
     <EmbeddedResource Remove="InputBox20.resx" />
     <EmbeddedResource Remove="WaitForm - Copy.resx" />
   </ItemGroup>
-  <ItemGroup Condition="!$(DefineConstants.Contains('WINFORM'))">
+  <ItemGroup Condition="!$(DefineConstants.Contains('WINFORM')) and !$(TargetFramework.EndsWith('-windows'))">
     <Compile Remove="ExMessageBox.cs" />
     <Compile Remove="ExMessageBox.Designer.cs" />
     <Compile Remove="InputBox.cs" />
@@ -59,11 +62,12 @@
     <Compile Remove="SearchFormBase.Designer.cs" />
     <Compile Remove="WaitForm.cs" />
     <Compile Remove="WaitForm.Designer.cs" />
+	<Compile Remove="ShortcutManager.cs"/>
     <EmbeddedResource Remove="ExMessageBox.resx" />
     <EmbeddedResource Remove="InputBox.resx" />
     <EmbeddedResource Remove="WaitForm.resx" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="$(DefineConstants.Contains('WINFORM')) or $(TargetFramework.EndsWith('-windows'))">
     <COMReference Include="IWshRuntimeLibrary">
       <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
       <VersionMajor>1</VersionMajor>
