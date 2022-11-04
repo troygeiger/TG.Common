@@ -3,9 +3,8 @@ using System.Reflection;
 
 namespace TG.Common
 {
-#if NET20
-    public delegate TResult Func<in T, out TResult>(T arg);
-#endif
+
+    [Obsolete("Use AssemblyInformation or Assembly.GetAssemblyInformation()")]
     static public class AssemblyInfo
     {
         static Assembly _callingAssembly = null;
