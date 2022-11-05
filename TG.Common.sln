@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TG.Common", "src\TG.Common\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{46779D98-9F9B-4A51-B664-62184B51BBE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{54865BE7-93CE-42E9-8445-6C2FF1B2AD73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{54865BE7-93CE-42E9-8445-6C2FF1B2AD73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleNet20", "tests\TestConsoleNet20\TestConsoleNet20.csproj", "{47981DED-4C71-4415-BE34-C6A575A97A59}"
 EndProject
