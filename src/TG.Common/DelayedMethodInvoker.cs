@@ -5,11 +5,14 @@ using System.Threading;
 
 namespace TG.Common
 {
+    /// <summary>
+    /// Invokes a <see cref="Delegate"/> after a given amount of time.
+    /// </summary>
     public class DelayedMethodInvoker : IDisposable
     {
 
         private Delegate Exe;
-        private System.Threading.Timer tmer;
+        private System.Threading.Timer timer;
         private int Delay = 0;
         private bool isRunning = false;
 
@@ -23,7 +26,7 @@ namespace TG.Common
         {
             Exe = del;
             Delay = DelayTime;
-            tmer = new System.Threading.Timer(new System.Threading.TimerCallback(TimesUp)
+            timer = new System.Threading.Timer(new System.Threading.TimerCallback(TimesUp)
                                               , args
                                               , System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
 
@@ -41,7 +44,7 @@ namespace TG.Common
         /// </summary>
         public void Invoke()
         {
-            tmer.Change(Delay, System.Threading.Timeout.Infinite);
+            timer.Change(Delay, System.Threading.Timeout.Infinite);
             isRunning = true;
         }
 
@@ -51,8 +54,8 @@ namespace TG.Common
         /// <param name="args">The arguments to pass to the method.</param>
         public void Invoke(params object[] args)
         {
-            tmer.Dispose();
-            tmer = new System.Threading.Timer(new System.Threading.TimerCallback(TimesUp)
+            timer.Dispose();
+            timer = new System.Threading.Timer(new System.Threading.TimerCallback(TimesUp)
                                               , args
                                               , System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
             this.Invoke();
@@ -143,7 +146,7 @@ namespace TG.Common
         /// </summary>
         public void Cancel()
         {
-            tmer.Change(System.Threading.Timeout.Infinite
+            timer.Change(System.Threading.Timeout.Infinite
                         , System.Threading.Timeout.Infinite);
             isRunning = false;
         }
@@ -153,9 +156,12 @@ namespace TG.Common
         /// </summary>
         public bool IsRunning { get { return isRunning; } }
 
+        /// <summary>
+        /// Disposes the underlining timer.
+        /// </summary>
         public void Dispose()
         {
-            tmer.Dispose();
+            timer.Dispose();
             isRunning = false;
         }
     }

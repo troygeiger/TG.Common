@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 namespace TG.Common
 {
+    /// <summary>
+    /// A basic logger for writing to log files.
+    /// </summary>
     public static class LogManager
     {
         static bool initialized;
@@ -15,7 +18,11 @@ namespace TG.Common
         static DateTime logDate;
         static object LogLock = new object();
 
-        public static void InitializeLog()
+        /// <summary>
+        /// Initializes the log at the default AppData.AppDataPath with a
+        /// filename based on the localized ToShortDateString.
+        /// </summary>
+        public static void InitializeDefaultLog()
         {
             logDate = DateTime.Now.Date;
 
@@ -27,13 +34,26 @@ namespace TG.Common
                 logPath = Path.Combine(logFolder, $"{logDate.ToShortDateString().Replace("/", "-")}.txt");
                 initialized = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 initialized = false;
             }
-
         }
-        
+
+        /// <summary>
+        /// Initializes the log at the default AppData.AppDataPath with a
+        /// filename based on the localized ToShortDateString.
+        /// </summary>
+        [Obsolete("Use InitializeDefaultLog instead.")]
+        public static void InitializeLog()
+        {
+            InitializeDefaultLog();
+        }
+
+        /// <summary>
+        /// Gets or sets the log file path in which the logs should be written
+        /// to; including the file name.
+        /// </summary>
         public static string LogPath
         {
             get { return logPath; }
@@ -44,23 +64,37 @@ namespace TG.Common
             }
         }
 
+        /// <summary>
+        /// Indicates if <see cref="LogManager"/> is initialized, path has been
+        /// verified and is ready to write logs.
+        /// </summary>
         public static bool IsInitialized { get { return initialized; } }
-        
+
+        /// <summary>
+        /// Gets or sets whether to write the log to Console.
+        /// </summary>
         public static bool IsDebugging { get; set; }
 
-        //[DebuggerStepThrough]
-        public static void WriteToLog(string Location, string Message, string ExceptionMessage)
+        /// <summary>
+        /// Writes an entry to the log file.
+        /// </summary>
+        /// <param name="location">Specify the location in the code in with the
+        /// log entry references.</param>
+        /// <param name="message">A message to include in the log.</param>
+        /// <param name="exceptionMessage">Include an additional exception
+        /// message below the message.</param>
+        public static void WriteToLog(string location, string message, string exceptionMessage = null)
         {
             lock (LogLock)
             {
                 if (!initialized)
                 {
-                    InitializeLog();
+                    InitializeDefaultLog();
                     if (!initialized) return;
                 }
-                
 
-                if (string.IsNullOrEmpty(Location))
+
+                if (string.IsNullOrEmpty(location))
                 {
                     System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace();
                     System.Reflection.MethodBase meth = null;
@@ -71,20 +105,20 @@ namespace TG.Common
                             break;
                     }
 
-                    Location = meth.DeclaringType.FullName + "." + meth.Name;
+                    location = meth.DeclaringType.FullName + "." + meth.Name;
 
                 }
-                Message = string.Format("[{0}] <{1}>: {2}", new object[] { DateTime.Now.ToString(), Location, Message });
+                message = string.Format("[{0}] <{1}>: {2}", new object[] { DateTime.Now.ToString(), location, message });
                 Console.ForegroundColor = ConsoleColor.White;
-                bool isException = !string.IsNullOrEmpty(ExceptionMessage);
-                if (isException) Message += "\r\n>>" + ExceptionMessage;
+                bool isException = !string.IsNullOrEmpty(exceptionMessage);
+                if (isException) message += "\r\n>>" + exceptionMessage;
                 //#if DEBUG
                 if (IsDebugging)
                 {
                     if (isException)
                         Console.ForegroundColor = ConsoleColor.Red;
 
-                    Console.WriteLine(Message);
+                    Console.WriteLine(message);
                 }
 
                 //#endif
@@ -92,7 +126,7 @@ namespace TG.Common
 
                 try
                 {
-                    System.IO.File.AppendAllText(logPath, Message + "\r\n");
+                    System.IO.File.AppendAllText(logPath, message + "\r\n");
                 }
                 catch (Exception)
                 {
@@ -102,35 +136,58 @@ namespace TG.Common
             }
         }
 
-        public static void WriteToLog(string Location, string Message)
+        /// <summary>
+        /// Writes an entry to the log file.
+        /// </summary>
+        /// <param name="location">Specify the location in the code in with the
+        /// log entry references.</param>
+        /// <param name="message">A message to include in the log.</param>
+        public static void WriteToLog(string location, string message)
         {
-            WriteToLog(Location, Message, null);
+            WriteToLog(location, message, null);
         }
 
-        public static void WriteToLog(string Message)
+        /// <summary>
+        /// Writes an entry to the log file.
+        /// </summary>
+        /// <param name="message">A message to include in the log.</param>
+        public static void WriteToLog(string message)
         {
-            WriteToLog(null, Message, null);
+            WriteToLog(null, message, null);
         }
 
+        /// <summary>
+        /// Writes an exception to the log file.
+        /// </summary>
+        /// <param name="message">A message to include in the log.</param>
+        /// <param name="ex">The <see cref="Exception"/> to log.</param>
         public static void WriteExceptionToLog(string message, Exception ex)
         {
-            System.Text.StringBuilder exmessage = new System.Text.StringBuilder();
-            exmessage.AppendLine(ex.Message);
-            exmessage.AppendLine(ex.StackTrace);
+            System.Text.StringBuilder exMessage = new System.Text.StringBuilder();
+            exMessage.AppendLine(ex.Message);
+            exMessage.AppendLine(ex.StackTrace);
             if (ex.InnerException != null)
             {
-                exmessage.AppendLine("=========Inner Exception==============");
-                exmessage.AppendLine(ex.InnerException.Message);
-                exmessage.AppendLine(ex.InnerException.StackTrace);
+                exMessage.AppendLine("=========Inner Exception==============");
+                exMessage.AppendLine(ex.InnerException.Message);
+                exMessage.AppendLine(ex.InnerException.StackTrace);
             }
-            WriteToLog(null, message, exmessage.ToString());
+            WriteToLog(null, message, exMessage.ToString());
         }
 
+        /// <summary>
+        /// Writes an exception to the log file.
+        /// </summary>
+        /// <param name="exceptionMessage">A message to include in the log.</param>
         public static void WriteExceptionToLog(string exceptionMessage)
         {
             WriteToLog(null, "Exception", exceptionMessage);
         }
 
+        /// <summary>
+        /// Writes an exception to the log file.
+        /// </summary>
+        /// <param name="ex">The <see cref="Exception"/> to log.</param>
         public static void WriteExceptionToLog(Exception ex)
         {
             WriteExceptionToLog("Exception", ex);
@@ -145,7 +202,8 @@ namespace TG.Common
             try
             {
                 List<string> files = new List<string>(Directory.GetFiles(Path.GetDirectoryName(LogPath), "*.txt"));
-                files.Sort((x, y) => {
+                files.Sort((x, y) =>
+                {
                     DateTime xd, yd;
                     DateTime.TryParse(Path.GetFileNameWithoutExtension(x), out xd);
                     DateTime.TryParse(Path.GetFileNameWithoutExtension(y), out yd);

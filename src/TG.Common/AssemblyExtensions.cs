@@ -65,9 +65,9 @@ namespace System.Reflection
         /// Gets the value from the Version attribute property.
         /// </summary>
         /// <param name="assembly">The assembly to collect information from.</param>
-        /// <returns><see cref="string"/></returns>
-        public static string GetVersion(this Assembly assembly)
-            => GetAssemblyAttributeValue<AssemblyVersionAttribute, string>(assembly, a => a.Version);
+        /// <returns><see cref="Version"/></returns>
+        public static Version GetVersion(this Assembly assembly)
+            => assembly.GetName().Version;
 
         /// <summary>
         /// Gets the value from the FileVersion attribute property.

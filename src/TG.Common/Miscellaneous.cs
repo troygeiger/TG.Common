@@ -144,6 +144,12 @@ namespace TG.Common
 
 
 #if !NET20
+        /// <summary>
+        /// Invokes a <see cref="Delegate"/> on the UI thread.
+        /// </summary>
+        /// <param name="delegate"></param>
+        /// <param name="destinationThread"></param>
+        /// <param name="arguments"></param>
         public static void ThreadSafeInvoke(Delegate @delegate, System.Threading.Thread destinationThread, params object[] arguments)
         {
 

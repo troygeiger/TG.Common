@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net20;net45;netstandard2.0;netstandard2.1;net6.0-windows;</TargetFrameworks>
+		<TargetFrameworks>netstandard2.1;netstandard2.0;net6.0-windows;net20;net45;</TargetFrameworks>
 		<Description>A small library of useful methods.</Description>
 		<Copyright>Copyright © Troy Geiger 2022</Copyright>
 		<Authors>Troy Geiger</Authors>
@@ -52,6 +52,7 @@
 		<Compile Remove="WaitForm.cs" />
 		<Compile Remove="WaitForm.Designer.cs" />
 		<Compile Remove="ShortcutManager.cs"/>
+		<Compile Remove="Enums.cs" />
 		<EmbeddedResource Remove="ExMessageBox.resx" />
 		<EmbeddedResource Remove="InputBox.resx" />
 		<EmbeddedResource Remove="WaitForm.resx" />

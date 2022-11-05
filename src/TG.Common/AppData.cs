@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TG.Common
 {
+    /// <summary>
+    /// Helper for getting and creating user profile AppData folders.
+    /// </summary>
     public static class AppData
     {
         /// <summary>
@@ -35,13 +38,19 @@ namespace TG.Common
         }
 
         /// <summary>
+        /// The default scheme used for <see cref="AppDataPath"/>.
+        /// </summary>
+        /// <value></value>
+        public static AppDataSchemes DefaultScheme { get; set; } = AppDataSchemes.CompanyTitle;
+
+        /// <summary>
         /// Gets the %AppData%\[Assembly.Company]\[Assembly.Title] path. If the path does not exist, it will be created before returning the path.
         /// </summary>
         public static string AppDataPath
         {
             get
             {
-                return GetAppDataPath(AppDataSchemes.CompanyTitle);
+                return GetAppDataPath(DefaultScheme);
             }
         }
 
