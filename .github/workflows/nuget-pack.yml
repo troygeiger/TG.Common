@@ -37,8 +37,8 @@ jobs:
       run: msbuild $env:Solution /t:Restore /p:Configuration=$env:Configuration
 
     # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test $env:Test_Project_Path
+    # - name: Execute unit tests
+    #   run: dotnet test $env:Test_Project_Path
 
     - name: Pack
       run: msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
