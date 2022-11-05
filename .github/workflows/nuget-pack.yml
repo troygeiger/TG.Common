@@ -46,8 +46,8 @@ jobs:
     - name: Push to NuGet.org
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
-      run: '| 
-      dotnet nuget push "src\TG.Common\bin\Release\*.nupkg"--skip-duplicate --api-key "$NUGET_TOKEN" --source "https://api.nuget.org/v3/index.json"'
+      run: '|
+      dotnet nuget push "src\TG.Common\bin\Release\*.nupkg" --skip-duplicate --api-key "$NUGET_TOKEN" --source "https://api.nuget.org/v3/index.json"'
       
 
     # - name: Push symbol package to NuGet.org
