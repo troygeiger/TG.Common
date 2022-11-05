@@ -43,8 +43,22 @@ jobs:
     - name: Pack
       run: msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
     
+    - name: Setup NuGet.exe for use with actions
+      # You may pin to the exact commit or the version.
+      # uses: NuGet/setup-nuget@fd9fffd6ca4541cf4152a9565835ca1a88a6eb37
+      uses: NuGet/setup-nuget@v1.1.1
+      env:
+
+      with:
+        # NuGet version to install. Can be `latest`, `preview`, a concrete version like `5.3.1`, or a semver range specifier like `5.x`.
+        nuget-version: # optional, default is latest
+        # NuGet API Key to configure.
+        nuget-api-key: # optional
+        # Source to scope the NuGet API Key to.
+        nuget-api-key-source: https://api.nuget.org/v3/index.json
+
     - name: Push to NuGet.org
-      run: dotnet nuget push "src\TG.Common\bin\Release\*.nupkg" --api-key "$NUGET_TOKEN" -s "https://api.nuget.org/v3/index.json" --skip-duplicate
+      run: dotnet nuget push "src\TG.Common\bin\Release\*.nupkg" --api-key "$NUGET_TOKEN" --skip-duplicate
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
 
