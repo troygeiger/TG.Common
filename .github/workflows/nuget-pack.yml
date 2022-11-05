@@ -44,7 +44,7 @@ jobs:
       run: msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
     
     - name: Push to NuGet.org
-      run: 'dotnet nuget push "src\TG.Common\bin\Release\*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_TOKEN" --skip-duplicate'
+      run: 'dotnet nuget push "src\TG.Common\bin\Release\*.nupkg" --api-key "$NUGET_TOKEN" --skip-duplicate'
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
 
