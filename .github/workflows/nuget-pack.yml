@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 10
+        fetch-depth: 100
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
