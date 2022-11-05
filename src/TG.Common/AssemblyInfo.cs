@@ -3,55 +3,92 @@ using System.Reflection;
 
 namespace TG.Common
 {
-
-    [Obsolete("Use AssemblyInformation or Assembly.GetAssemblyInformation()")]
-    static public class AssemblyInfo
+    /// <summary>
+    /// A helper for collecting assembly information such as Product, Version...
+    /// </summary>
+    public static class AssemblyInfo
     {
-        static Assembly _callingAssembly = null;
+        private static Assembly _referenceAssembly = null;
 
-        private static Assembly CallingAssembly
+        /// <summary>
+        /// The <see cref="Assembly"/> to collect information from.
+        /// </summary>
+        public static Assembly ReferenceAssembly
         {
             get
             {
-                if (_callingAssembly == null)
+                if (_referenceAssembly == null)
                 {
-                    System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace();
-                    System.Reflection.MethodBase meth = null;
-                    for (int i = 0; i < trace.FrameCount; i++)
-                    {
-                        meth = trace.GetFrame(i).GetMethod();
-                        if (meth.DeclaringType.Namespace != "TG.Common")//.Name != "WriteToLog" && meth.Name != "WriteExceptionToLog")
-                            break;
-                    }
-                    _callingAssembly = meth.DeclaringType.Assembly;
+                    _referenceAssembly = Assembly.GetEntryAssembly();
                 }
-                return _callingAssembly;
+                return _referenceAssembly;
+            }
+            set
+            {
+                _referenceAssembly = value;
             }
         }
 
-        public static string Company { get { return GetEntryAssemblyAttribute<AssemblyCompanyAttribute>(a => a.Company); } }
-        public static string Product { get { return GetEntryAssemblyAttribute<AssemblyProductAttribute>(a => a.Product); } }
-        public static string Copyright { get { return GetEntryAssemblyAttribute<AssemblyCopyrightAttribute>(a => a.Copyright); } }
-        public static string Trademark { get { return GetEntryAssemblyAttribute<AssemblyTrademarkAttribute>(a => a.Trademark); } }
-        public static string Title { get { return GetEntryAssemblyAttribute<AssemblyTitleAttribute>(a => a.Title); } }
-        public static string Description { get { return GetEntryAssemblyAttribute<AssemblyDescriptionAttribute>(a => a.Description); } }
-        public static string Configuration { get { return GetEntryAssemblyAttribute<AssemblyDescriptionAttribute>(a => a.Description); } }
-        public static string FileVersion { get { return GetEntryAssemblyAttribute<AssemblyFileVersionAttribute>(a => a.Version); } }
+        /// <summary>
+        /// Gets the value from the Company attribute property.
+        /// </summary>
+        public static string Company => GetEntryAssemblyAttribute<AssemblyCompanyAttribute>(a => a.Company);
 
-        public static Version Version { get { return CallingAssembly.GetName().Version; } }
-        public static string VersionFull { get { return Version.ToString(); } }
-        public static string VersionMajor { get { return Version.Major.ToString(); } }
-        public static string VersionMinor { get { return Version.Minor.ToString(); } }
-        public static string VersionBuild { get { return Version.Build.ToString(); } }
-        public static string VersionRevision { get { return Version.Revision.ToString(); } }
-        
+        /// <summary>
+        /// Gets the value from the Product attribute property.
+        /// </summary>
+        public static string Product => GetEntryAssemblyAttribute<AssemblyProductAttribute>(a => a.Product);
+
+        /// <summary>
+        /// Gets the value from the Copyright attribute property.
+        /// </summary>
+        public static string Copyright => GetEntryAssemblyAttribute<AssemblyCopyrightAttribute>(a => a.Copyright);
+
+        /// <summary>
+        /// Gets the value from the Trademark attribute property.
+        /// </summary>
+        public static string Trademark => GetEntryAssemblyAttribute<AssemblyTrademarkAttribute>(a => a.Trademark);
+
+        /// <summary>
+        /// Gets the value from the Title attribute property.
+        /// </summary>
+        public static string Title => GetEntryAssemblyAttribute<AssemblyTitleAttribute>(a => a.Title);
+
+        /// <summary>
+        /// Gets the value from the Description attribute property.
+        /// </summary>
+        public static string Description => GetEntryAssemblyAttribute<AssemblyDescriptionAttribute>(a => a.Description);
+
+        /// <summary>
+        /// Gets the value from the Configuration attribute property.
+        /// </summary>
+        public static string Configuration => GetEntryAssemblyAttribute<AssemblyConfigurationAttribute>(a => a.Configuration);
+
+        /// <summary>
+        /// Gets the value from the FileVersion attribute property.
+        /// </summary>
+        public static string FileVersion => GetEntryAssemblyAttribute<AssemblyFileVersionAttribute>(a => a.Version);
+
+        /// <summary>
+        /// Gets the value from the Version attribute property.
+        /// </summary>
+        public static Version Version => new Version(GetEntryAssemblyAttribute<AssemblyVersionAttribute>(a => a.Version));
+
+        /// <summary>
+        /// Gets the value from the version string from the Version attribute property.
+        /// </summary>
+        public static string VersionString => GetEntryAssemblyAttribute<AssemblyVersionAttribute>(a => a.Version);
+
         private static string GetEntryAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
         {
-            T attribute = (T)Attribute.GetCustomAttribute(CallingAssembly, typeof(T));
+            T attribute = (T)Attribute.GetCustomAttribute(ReferenceAssembly, typeof(T));
             return value.Invoke(attribute);
         }
 
+#if NET20
+
+        internal delegate TOut Func<TIn, TOut>(TIn attribute);
+
+#endif
     }
-
-
 }

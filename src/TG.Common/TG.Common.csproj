@@ -1,82 +1,79 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net20;net45;netstandard2.0;netstandard2.1;netcoreapp3.1;net6.0-windows;</TargetFrameworks>
-    <Description>A small library of useful methods.</Description>
-    <Copyright>Copyright © Troy Geiger 2022</Copyright>
-    <Authors>Troy Geiger</Authors>
-    <Company>Troy Geiger</Company>
-    <PackageProjectUrl>https://github.com/troygeiger/TG.Common</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/troygeiger/TG.Common</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryType>git</RepositoryType>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <MinVerTagPrefix>v</MinVerTagPrefix>
-    <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net20' or '$(TargetFramework)' == 'net45'">
-    <DefineConstants>WINFORM</DefineConstants>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net20;net45;netstandard2.0;netstandard2.1;net6.0-windows;</TargetFrameworks>
+		<Description>A small library of useful methods.</Description>
+		<Copyright>Copyright © Troy Geiger 2022</Copyright>
+		<Authors>Troy Geiger</Authors>
+		<Company>Troy Geiger</Company>
+		<PackageProjectUrl>https://github.com/troygeiger/TG.Common</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/troygeiger/TG.Common</RepositoryUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<MinVerTagPrefix>v</MinVerTagPrefix>
+		<MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net20' or '$(TargetFramework)' == 'net45'">
+		<DefineConstants>WINFORM;WINDOWS</DefineConstants>
+	</PropertyGroup>
 	<PropertyGroup Condition="$(TargetFramework.EndsWith('-windows'))">
 		<UseWindowsForms>true</UseWindowsForms>
+		<DefineConstants>WINDOWS</DefineConstants>
 	</PropertyGroup>
-  <ItemGroup Condition="$(DefineConstants.Contains('WINFORM'))">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Properties\**" />
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="InputBox20.cs" />
-    <Compile Remove="InputBox20.designer.cs" />
-    <Compile Remove="SearchFormBase20.cs" />
-    <Compile Remove="SearchFormBase20.Designer.cs" />
-    <EmbeddedResource Remove="InputBox20.resx" />
-    <EmbeddedResource Remove="WaitForm - Copy.resx" />
-  </ItemGroup>
-  <ItemGroup Condition="!$(DefineConstants.Contains('WINFORM')) and !$(TargetFramework.EndsWith('-windows'))">
-    <Compile Remove="ExMessageBox.cs" />
-    <Compile Remove="ExMessageBox.Designer.cs" />
-    <Compile Remove="InputBox.cs" />
-    <Compile Remove="InputBox.designer.cs" />
-    <Compile Remove="SearchFormBase.cs" />
-    <Compile Remove="SearchFormBase.Designer.cs" />
-    <Compile Remove="WaitForm.cs" />
-    <Compile Remove="WaitForm.Designer.cs" />
-	<Compile Remove="ShortcutManager.cs"/>
-    <EmbeddedResource Remove="ExMessageBox.resx" />
-    <EmbeddedResource Remove="InputBox.resx" />
-    <EmbeddedResource Remove="WaitForm.resx" />
-  </ItemGroup>
-  <ItemGroup Condition="$(DefineConstants.Contains('WINFORM')) or $(TargetFramework.EndsWith('-windows'))">
-    <COMReference Include="IWshRuntimeLibrary">
-      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MinVer" Version="4.1.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+	<ItemGroup Condition="$(DefineConstants.Contains('WINFORM'))">
+		<Reference Include="System" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Design" />
+		<Reference Include="System.Drawing" />
+		<Reference Include="System.Drawing.Design" />
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Properties\**" />
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup Condition="!$(DefineConstants.Contains('WINDOWS'))">
+		<Compile Remove="ExMessageBox.cs" />
+		<Compile Remove="ExMessageBox.Designer.cs" />
+		<Compile Remove="InputBox.cs" />
+		<Compile Remove="InputBox.designer.cs" />
+		<Compile Remove="SearchFormBase.cs" />
+		<Compile Remove="SearchFormBase.Designer.cs" />
+		<Compile Remove="WaitForm.cs" />
+		<Compile Remove="WaitForm.Designer.cs" />
+		<Compile Remove="ShortcutManager.cs"/>
+		<EmbeddedResource Remove="ExMessageBox.resx" />
+		<EmbeddedResource Remove="InputBox.resx" />
+		<EmbeddedResource Remove="WaitForm.resx" />
+	</ItemGroup>
+	<ItemGroup Condition="$(DefineConstants.Contains('NET20'))">
+		<Compile Remove="AssemblyExtensions.cs" />
+		<None Include="AssemblyExtensions.cs"/>
+	</ItemGroup>
+	<ItemGroup Condition="$(DefineConstants.Contains('WINDOWS'))">
+		<COMReference Include="IWshRuntimeLibrary">
+			<Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+			<VersionMajor>1</VersionMajor>
+			<VersionMinor>0</VersionMinor>
+			<Lcid>0</Lcid>
+			<WrapperTool>tlbimp</WrapperTool>
+			<Isolated>False</Isolated>
+			<EmbedInteropTypes>True</EmbedInteropTypes>
+		</COMReference>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MinVer" Version="4.1.0">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
 </Project>
