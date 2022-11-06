@@ -48,7 +48,7 @@ jobs:
       uses: NuGet/setup-nuget@v1.1.1
 
     - name: Publish the package to nuget.org
-      run: nuget push */src/bin/Release/*.nupkg -ApiKey $NUGET_AUTH_TOKEN -ConfigFile nuget.config -NonInteractive -SkipDuplicate
+      run: nuget push src/TG.Common/bin/Release/*.nupkg -ApiKey $NUGET_AUTH_TOKEN -ConfigFile nuget.config -NonInteractive -SkipDuplicate
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
       
