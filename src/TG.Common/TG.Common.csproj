@@ -15,6 +15,7 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<MinVerTagPrefix>v</MinVerTagPrefix>
 		<MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
     <MinVerVerbosity>normal</MinVerVerbosity>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(TargetFramework)' == 'net20' or '$(TargetFramework)' == 'net45'">
