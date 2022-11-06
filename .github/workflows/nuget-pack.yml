@@ -11,7 +11,7 @@ on:
     
 jobs:
   build:
-
+    name: 'PackPush'
     runs-on: windows-latest
     
     env:
@@ -25,11 +25,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    # - name: Setup .NET
-    #   uses: actions/setup-dotnet@v2
-    #   with:
-    #     dotnet-version: 6.0.x
-
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1.3
 
@@ -37,14 +32,21 @@ jobs:
     - name: Restore the application
       run: msbuild $env:Solution /t:Restore /p:Configuration=$env:Configuration
 
-    # Execute all unit tests in the solution
-    # - name: Execute unit tests
-    #   run: dotnet test $env:Test_Project_Path
+    #Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test $env:Test_Project_Path
 
-    - name: Pack & Push
-      run: |
-        msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
-        dotnet nuget push src\TG.Common\bin\Release\*.nupkg --api-key $env:NUGET_TOKEN --source https://api.nuget.org/v3/index.json --skip-duplicate
-        dotnet nuget push src\TG.Common\bin\Release\*.snupkg --api-key $env:NUGET_TOKEN --source https://api.nuget.org/v3/index.json --skip-duplicate
+    - name: Pack
+      run: msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
+      env:
+        NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
+
+    - name: Push to NuGet.org
+      run: dotnet nuget push src\TG.Common\bin\Release\*.nupkg --api-key "$env:NUGET_TOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      env:
+        NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
+
+    - name: Push symbol package to NuGet.org
+      run: dotnet nuget push src\TG.Common\bin\Release\*.snupkg --api-key "$env:NUGET_TOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
