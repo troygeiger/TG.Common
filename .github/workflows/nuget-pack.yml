@@ -48,12 +48,12 @@ jobs:
       run: msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
     
     - name: Push to NuGet.org
-      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.nupkg --api-key "$NUGET_TOKEN" --skip-duplicate
+      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.nupkg
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
 
     - name: Push symbol package to NuGet.org
-      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.snupkg --api-key "$NUGET_TOKEN" --skip-duplicate
+      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.snupkg
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
 
