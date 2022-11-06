@@ -32,7 +32,7 @@ jobs:
     - name: SetNuGet
       env: 
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
-      run: nuget setapikey $NUGET_TOKEN -Source https://api.nuget.org/v3/index.json -ConfigFile NuGet.Config
+      run: nuget setapikey $env:NUGET_TOKEN -Source https://api.nuget.org/v3/index.json -ConfigFile NuGet.Config
       shell: powershell
       
 
