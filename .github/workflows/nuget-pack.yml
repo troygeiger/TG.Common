@@ -29,7 +29,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-        source-url: https://api.nuget.org/v3/index.json
+        source-url: https://www.nuget.org/api/v2/package
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
 
