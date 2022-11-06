@@ -11,7 +11,7 @@ on:
     
 jobs:
   build:
-    name: PackPush
+
     runs-on: windows-latest
     
     env:
@@ -29,12 +29,6 @@ jobs:
     #   uses: actions/setup-dotnet@v2
     #   with:
     #     dotnet-version: 6.0.x
-    - name: SetNuGet
-      env: 
-        NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
-      run: nuget setapikey $env:NUGET_TOKEN -Source https://api.nuget.org/v3/index.json -ConfigFile NuGet.Config
-      shell: powershell
-      
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1.3
@@ -50,7 +44,7 @@ jobs:
     - name: Pack & Push
       run: |
         msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
-        dotnet nuget push src\TG.Common\bin\Release\*.nupkg --api-key "$NUGET_TOKEN" --source NuGet.Config --skip-duplicate
-        dotnet nuget push src\TG.Common\bin\Release\*.snupkg --api-key "$NUGET_TOKEN" --source NuGet.Config --skip-duplicate
+        dotnet nuget push src\TG.Common\bin\Release\*.nupkg --api-key $env:NUGET_TOKEN --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push src\TG.Common\bin\Release\*.snupkg --api-key $env:NUGET_TOKEN --source https://api.nuget.org/v3/index.json --skip-duplicate
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
