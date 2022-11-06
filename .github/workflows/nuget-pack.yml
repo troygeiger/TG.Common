@@ -42,9 +42,9 @@ jobs:
       run: dotnet test $env:Test_Project_Path
 
     - name: Pack & Push
-      run: '|
-      msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
-      dotnet nuget push src\TG.Common\bin\Release\*.nupkg --api-key "$NUGET_TOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate
-      dotnet nuget push src\TG.Common\bin\Release\*.snupkg --api-key "$NUGET_TOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate'
+      run: |
+        msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
+        dotnet nuget push src\TG.Common\bin\Release\*.nupkg --api-key "$NUGET_TOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push src\TG.Common\bin\Release\*.snupkg --api-key "$NUGET_TOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate
       env:
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
