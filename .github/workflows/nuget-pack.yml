@@ -11,7 +11,7 @@ on:
     
 jobs:
   build:
-
+    name: PackPush
     runs-on: windows-latest
     
     env:
@@ -33,6 +33,8 @@ jobs:
       env: 
         NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
       run: nuget setapikey $NUGET_TOKEN -Source https://api.nuget.org/v3/index.json -ConfigFile NuGet.Config
+      shell: powershell
+      
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1.3
