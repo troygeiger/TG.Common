@@ -30,8 +30,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
         source-url: https://api.nuget.org/v3/index.json
-      env:
-        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1.3
@@ -48,9 +46,12 @@ jobs:
       run: msbuild $env:PkgProject /t:pack /p:Configuration=$env:Configuration
     
     - name: Push to NuGet.org
-      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.nupkg --skip-duplicate
+      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.nupkg --api-key "$NUGET_TOKEN" --skip-duplicate
+      env:
+        NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
 
     - name: Push symbol package to NuGet.org
-      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.snupkg --skip-duplicate
-
+      run: dotnet nuget push .\src\TG.Common\bin\Release\TG.Common.*.snupkg --api-key "$NUGET_TOKEN" --skip-duplicate
+      env:
+        NUGET_TOKEN: ${{ secrets.NUGET_KEY }}
 
