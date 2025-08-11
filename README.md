@@ -1,14 +1,14 @@
 # TG.Common
 
-This library provides methods for logging to file, object cloning delaying when
-to invoke a method and various other useful tools.
-I try to add helpers that I end up using regularly over the years, such as the
-InputBox, AppData and AssemblyInfo.
+This library provides utilities for logging to file, object cloning, delayed method invocation, task helpers, and other small helpers.
+It targets .NET Standard 2.0 and 2.1 and has nullable reference types enabled.
+
+Note on WinForms helpers: InputBox/ExMessageBox/WaitForm have moved to a separate repository ([TG.Common.WinForms](https://github.com/troygeiger/TG.Common.WinForms)) and are no longer part of this package.
 
 ## AssemblyInfo
 
 This class helps to get various Assembly information, such as the Version,
-InformationVersion, Title or Company. The default assembly referenced is Assembly.GetEntryAssembly().
+InformationVersion, Title or Company. The default assembly referenced is Assembly.GetEntryAssembly() (with a safe fallback to the executing assembly).
 
 ### Basic AssemblyInfo Usage
 
@@ -76,9 +76,19 @@ catch (Exception ex)
 
 ## Crypto
 
-This class is pretty outdated but can still be useful if you need some simple
-encryption. It has options for encrypting/decrypting strings, byte arrays and
-Base64 strings.
+Modern symmetric encryption with AES-CBC and a random IV per message.
+
+- New encryptions: payload is IV || CIPHERTEXT (IV is 16 bytes)
+- Decryption first attempts the new AES format, then falls back to legacy Rijndael with the historical fixed IV for backward compatibility
+- Keys: input key bytes are normalized to 32 bytes (SHA-like padding behavior preserved from prior version)
+
+Examples
+
+```csharp
+var crypto = new TG.Common.Crypto("my-secret-key");
+string cipher = crypto.EncryptBase64("Hello, world");
+string plain = crypto.DecryptBase64(cipher); // "Hello, world"
+```
 
 ## DelayedMethodInvoker
 
@@ -87,21 +97,28 @@ initialized, call Invoke and the internal timer is started. You can also
 call the RestartTimer method and the timer will start/restart. That can be
 useful for "debouncing" a button click.
 
-## WinForms
+## WinForms (moved)
 
-There are three included forms that can be used if targeting WinForms. InputBox
-is the most common form I use since that does't seem to be built into C#.
-
-### Forms
-
-- InputBox
-  - Prompt for user input.
-- ExMessageBox
-  - Honestly, I don't remember why I created this form.
-- WaitForm
-  - A popup form showing a marquee progress bar and message.
+The WinForms helpers (InputBox, ExMessageBox, WaitForm) were split into a separate package to keep TG.Common cross-platform. See the TG.Common.WinForms repository/package.
 
 ## Miscellaneous
 
 This class has one-off helpers. The only notable one would be CloneObject; which
 can do a deep clone of an object.
+
+## Task helpers
+
+Includes helpers like SafeFireAndForget for safely ignoring tasks while still catching exceptions.
+
+```csharp
+// Attach a global exception handler if desired
+TG.Common.TaskHelpers.DefaultSafeFireAndForgetExceptionHandler = ex => TG.Common.LogManager.WriteExceptionToLog(ex);
+
+// Fire and forget safely
+SomeAsyncCall().SafeFireAndForget(onException: ex => Console.WriteLine(ex));
+```
+
+## Target frameworks and nullability
+
+- Target frameworks: netstandard2.0; netstandard2.1
+- Nullable reference types: enabled
