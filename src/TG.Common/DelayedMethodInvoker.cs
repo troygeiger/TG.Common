@@ -32,12 +32,10 @@ namespace TG.Common
 
         }
 
-#if !NET20
         /// <summary>
         /// Set this property if you would like to provide what <see cref="System.Threading.Thread"/> should be returned to when invoking the delegate.
         /// </summary>
         public Thread ReturnThread { get; set; }
-#endif
 
         /// <summary>
         /// Starts the delay timer and then invokes the method once the delay has elapsed.
@@ -75,14 +73,7 @@ namespace TG.Common
                     {
                         Synchronizer = (System.ComponentModel.ISynchronizeInvoke)Exe.Target;
                     }
-#if NET45
-                    else if (ReturnThread != null)
-                    {
-                        var dispatcher = System.Windows.Threading.Dispatcher.FromThread(ReturnThread);
-                        dispatcher.Invoke(Exe);
-                        return;
-                    }
-#endif
+                    
                     else
                     {
                         Exe.DynamicInvoke((object[])args);

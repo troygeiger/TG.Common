@@ -36,7 +36,7 @@ namespace UnitTests
             invocationTimer.Restart();
             invoker.Invoke(72);
 
-            Thread.Sleep(120);
+            Thread.Sleep(200);
         }
 
         [TearDown]

@@ -84,17 +84,11 @@ namespace TG.Common
         /// </summary>
         public static string InformationVersion => GetEntryAssemblyAttribute<AssemblyInformationalVersionAttribute>(a => a.InformationalVersion);
 
-        private static string GetEntryAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
+    private static string GetEntryAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
         {
             T attribute = (T)Attribute.GetCustomAttribute(ReferenceAssembly, typeof(T));
             if (attribute == null) return string.Empty;
             return value.Invoke(attribute);
         }
-
-#if NET20
-
-        internal delegate TOut Func<TIn, TOut>(TIn attribute);
-
-#endif
     }
 }

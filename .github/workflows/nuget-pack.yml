@@ -3,6 +3,10 @@
 
 name: NuGet Pack & Push
 
+concurrency:
+  group: nuget-publish
+  cancel-in-progress: true
+
 on:
   push:
     tags:

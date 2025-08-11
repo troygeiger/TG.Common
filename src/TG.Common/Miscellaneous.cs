@@ -142,15 +142,13 @@ namespace TG.Common
             return result;
         }
 
-
-#if !NET20
         /// <summary>
         /// Invokes a <see cref="Delegate"/> on the UI thread.
         /// </summary>
         /// <param name="delegate"></param>
         /// <param name="destinationThread"></param>
         /// <param name="arguments"></param>
-        public static void ThreadSafeInvoke(Delegate @delegate, System.Threading.Thread destinationThread, params object[] arguments)
+    public static void ThreadSafeInvoke(Delegate @delegate, System.Threading.Thread destinationThread, params object[] arguments)
         {
 
             Delegate[] Dels = @delegate.GetInvocationList();
@@ -160,14 +158,6 @@ namespace TG.Common
             {
                 Synchronizer = (System.ComponentModel.ISynchronizeInvoke)@delegate.Target;
             }
-#if NET45
-            else if (destinationThread != null)
-            {
-                var dispatcher = System.Windows.Threading.Dispatcher.FromThread(destinationThread);
-                dispatcher.Invoke(@delegate);
-                return;
-            }
-#endif
             else
             {
                 @delegate.DynamicInvoke(arguments);
@@ -192,8 +182,6 @@ namespace TG.Common
                     sync.DynamicInvoke(arguments);
                 }
             }
-
-        } 
-#endif
-        }
+    } 
+    } 
     }

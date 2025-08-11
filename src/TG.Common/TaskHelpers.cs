@@ -1,4 +1,3 @@
-#if !NET20
 using System;
 using System.Collections.Concurrent;
 using System.Runtime.ExceptionServices;
@@ -155,4 +154,3 @@ namespace TG.Common
         }
     }
 }
-#endif

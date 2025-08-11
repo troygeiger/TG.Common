@@ -1,4 +1,3 @@
-#if NET6_0_OR_GREATER || NETSTANDARD2_0_OR_GREATER
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,8 +67,7 @@ namespace TG.Common
             }
         }
 
-#if NET6_0
-        
+#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
 
         /// <summary>
         /// Executes a <see cref="ValueTask"/> without awaiting its completion, handling any exceptions that occur.
@@ -127,4 +125,3 @@ namespace TG.Common
 
     }
 }
-#endif
