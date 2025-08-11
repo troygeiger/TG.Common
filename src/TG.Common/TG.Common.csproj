@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;netstandard2.0;net6.0-windows;net20;net45;</TargetFrameworks>
+		<TargetFrameworks>netstandard2.1;netstandard2.0</TargetFrameworks>
 		<Description>A small library of useful methods.</Description>
-		<Copyright>Copyright © Troy Geiger 2022</Copyright>
+		<Copyright>Copyright © Troy Geiger 2025</Copyright>
 		<Authors>Troy Geiger</Authors>
 		<Company>Troy Geiger</Company>
 		<RepositoryUrl>https://github.com/troygeiger/TG.Common</RepositoryUrl>
@@ -12,30 +12,13 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<MinVerTagPrefix>v</MinVerTagPrefix>
-		<MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-    <MinVerVerbosity>normal</MinVerVerbosity>
+		<MinVerTagPrefix>v</MinVerTagPrefix>
+		<MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
+		<MinVerMinimumMajorMinor>3.0</MinVerMinimumMajorMinor>
+		<MinVerVerbosity>normal</MinVerVerbosity>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net20' or '$(TargetFramework)' == 'net45'">
-		<DefineConstants>WINFORM;WINDOWS</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup Condition="$(TargetFramework.EndsWith('-windows'))">
-		<UseWindowsForms>true</UseWindowsForms>
-		<DefineConstants>WINDOWS</DefineConstants>
-	</PropertyGroup>
-	<ItemGroup Condition="$(DefineConstants.Contains('WINFORM'))">
-		<Reference Include="System" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Design" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Drawing.Design" />
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Xml" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-		<Reference Include="WindowsBase" />
-	</ItemGroup>
+
 	<ItemGroup>
 		<None Remove="Properties\**" />
 		<None Include="..\..\README.md">
@@ -43,39 +26,12 @@
 			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
-	<ItemGroup Condition="!$(DefineConstants.Contains('WINDOWS'))">
-		<Compile Remove="ExMessageBox.cs" />
-		<Compile Remove="ExMessageBox.Designer.cs" />
-		<Compile Remove="InputBox.cs" />
-		<Compile Remove="InputBox.designer.cs" />
-		<Compile Remove="SearchFormBase.cs" />
-		<Compile Remove="SearchFormBase.Designer.cs" />
-		<Compile Remove="WaitForm.cs" />
-		<Compile Remove="WaitForm.Designer.cs" />
-		<Compile Remove="ShortcutManager.cs"/>
-		<Compile Remove="Enums.cs" />
-		<EmbeddedResource Remove="ExMessageBox.resx" />
-		<EmbeddedResource Remove="InputBox.resx" />
-		<EmbeddedResource Remove="WaitForm.resx" />
-	</ItemGroup>
-	<ItemGroup Condition="$(DefineConstants.Contains('NET20'))">
-		<Compile Remove="AssemblyExtensions.cs" />
-		<None Include="AssemblyExtensions.cs"/>
-	</ItemGroup>
-	<ItemGroup Condition="$(DefineConstants.Contains('WINDOWS'))">
-		<COMReference Include="IWshRuntimeLibrary">
-			<Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
-			<VersionMajor>1</VersionMajor>
-			<VersionMinor>0</VersionMinor>
-			<Lcid>0</Lcid>
-			<WrapperTool>tlbimp</WrapperTool>
-			<Isolated>False</Isolated>
-			<EmbedInteropTypes>True</EmbedInteropTypes>
-		</COMReference>
-	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="MinVer" Version="4.1.0">
+		<PackageReference Include="MinVer" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<!-- No WinForms files present; no removals needed -->
 	</ItemGroup>
 </Project>
