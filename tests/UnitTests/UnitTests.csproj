@@ -8,6 +8,7 @@
 	  <Version>1.2.3.4</Version>
     <InformationalVersion>1.2 Test</InformationalVersion>
 	  <Description>Unit Tests</Description>
+	  <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
