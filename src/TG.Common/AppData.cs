@@ -66,7 +66,7 @@ namespace TG.Common
             if ((scheme == AppDataSchemes.CompanyTitle || scheme == AppDataSchemes.Title) && string.IsNullOrEmpty(AssemblyInfo.Title))
                 throw new Exception("Assembly Title is not set.");
 
-            string path = null;
+            string path = string.Empty;
             switch (scheme)
             {
                 case AppDataSchemes.CompanyTitle:
@@ -98,7 +98,7 @@ namespace TG.Common
             return path;
         }
 
-        private static string GetPathSafeString(string segment)
+    private static string GetPathSafeString(string segment)
         {
             foreach (var item in Path.GetInvalidFileNameChars())
                 segment = segment.Replace(new string(new char[] { item }), "");

@@ -8,18 +8,18 @@ namespace TG.Common
     /// </summary>
     public static class AssemblyInfo
     {
-        private static Assembly _referenceAssembly = null;
+    private static Assembly? _referenceAssembly = null;
 
         /// <summary>
         /// The <see cref="Assembly"/> to collect information from.
         /// </summary>
-        public static Assembly ReferenceAssembly
+    public static Assembly ReferenceAssembly
         {
             get
             {
                 if (_referenceAssembly == null)
                 {
-                    _referenceAssembly = Assembly.GetEntryAssembly();
+            _referenceAssembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
                 }
                 return _referenceAssembly;
             }
@@ -84,9 +84,9 @@ namespace TG.Common
         /// </summary>
         public static string InformationVersion => GetEntryAssemblyAttribute<AssemblyInformationalVersionAttribute>(a => a.InformationalVersion);
 
-    private static string GetEntryAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
+        private static string GetEntryAssemblyAttribute<T>(Func<T, string> value) where T : Attribute
         {
-            T attribute = (T)Attribute.GetCustomAttribute(ReferenceAssembly, typeof(T));
+            var attribute = (T?)Attribute.GetCustomAttribute(ReferenceAssembly, typeof(T));
             if (attribute == null) return string.Empty;
             return value.Invoke(attribute);
         }

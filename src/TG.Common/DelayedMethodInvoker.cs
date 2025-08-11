@@ -35,7 +35,7 @@ namespace TG.Common
         /// <summary>
         /// Set this property if you would like to provide what <see cref="System.Threading.Thread"/> should be returned to when invoking the delegate.
         /// </summary>
-        public Thread ReturnThread { get; set; }
+    public Thread? ReturnThread { get; set; }
 
         /// <summary>
         /// Starts the delay timer and then invokes the method once the delay has elapsed.
@@ -67,7 +67,7 @@ namespace TG.Common
                 try
                 {
                     Delegate[] Dels = Exe.GetInvocationList();
-                    System.ComponentModel.ISynchronizeInvoke Synchronizer = null;
+                    System.ComponentModel.ISynchronizeInvoke? Synchronizer = null;
 
                     if (Exe.Target != null && typeof(System.ComponentModel.ISynchronizeInvoke).IsAssignableFrom(Exe.Target.GetType()))
                     {

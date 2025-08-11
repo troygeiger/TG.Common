@@ -44,9 +44,9 @@ namespace TG.Common
         /// <returns>Return value from the task</returns>
         public static T RunSync<T>(Func<Task<T>> task)
         {
-            T result = default;
+            T? result = default;
             RunSync(async () => { result = await task(); });
-            return result;
+            return result!;
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace TG.Common
         /// </summary>
         private class CustomSynchronizationContext : SynchronizationContext
         {
-            private readonly ConcurrentQueue<Tuple<SendOrPostCallback, object>> _items = new ConcurrentQueue<Tuple<SendOrPostCallback, object>>();
+            private readonly ConcurrentQueue<Tuple<SendOrPostCallback, object?>> _items = new ConcurrentQueue<Tuple<SendOrPostCallback, object?>>();
             private readonly AutoResetEvent _workItemsWaiting = new AutoResetEvent(false);
             private readonly Func<Task> _task;
-            private ExceptionDispatchInfo _caughtException = null;
+            private ExceptionDispatchInfo? _caughtException = null;
             private bool _done;
 
             /// <summary>
@@ -90,7 +90,7 @@ namespace TG.Common
             /// </summary>
             /// <param name="function">Callback function</param>
             /// <param name="state">Callback state</param>
-            public override void Post(SendOrPostCallback function, object state)
+            public override void Post(SendOrPostCallback function, object? state)
             {
                 _items.Enqueue(Tuple.Create(function, state));
                 _workItemsWaiting.Set();
@@ -101,7 +101,7 @@ namespace TG.Common
             /// </summary>
             public void Run()
             {
-                async void PostCallback(object e)
+                async void PostCallback(object? e)
                 {
                     try
                     {
@@ -144,7 +144,7 @@ namespace TG.Common
             /// </summary>
             /// <param name="function">Callback function</param>
             /// <param name="state">Callback state</param>
-            public override void Send(SendOrPostCallback function, object state) => throw new NotSupportedException("Cannot send to same thread");
+            public override void Send(SendOrPostCallback function, object? state) => throw new NotSupportedException("Cannot send to same thread");
 
             /// <summary>
             /// When overridden in a derived class, creates a copy of the synchronization context. Not needed, so just return ourselves.

@@ -17,6 +17,8 @@
 		<MinVerDefaultPreReleaseIdentifiers>preview.0</MinVerDefaultPreReleaseIdentifiers>
 		<MinVerMinimumMajorMinor>3.0</MinVerMinimumMajorMinor>
 		<MinVerVerbosity>normal</MinVerVerbosity>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

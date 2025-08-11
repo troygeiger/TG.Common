@@ -36,7 +36,7 @@ namespace TG.Common
             return flag;
         }
 
-        private static object GetDefault(Type type)
+    private static object? GetDefault(Type type)
         {
             if (type.IsValueType)
             {
@@ -53,7 +53,7 @@ namespace TG.Common
         /// <returns>A new instance of T with properties copied from obj.</returns>
         public static T CloneObject<T>(T src)
         {
-            return (T)InnerClone(typeof(T), src, false);
+            return (T)InnerClone(typeof(T), src!, false)!;
         }
 
 
@@ -66,10 +66,10 @@ namespace TG.Common
         /// <returns>A new instance of T with properties copied from obj.</returns>
         public static T CloneObject<T>(T src, bool deepClone)
         {
-            return (T)InnerClone(typeof(T), src, deepClone);
+            return (T)InnerClone(typeof(T), src!, deepClone)!;
         }
 
-        private static object InnerClone(Type destType, object src, bool deepClone)
+        private static object? InnerClone(Type destType, object? src, bool deepClone)
         {
             if (destType.IsValueType)
             {
@@ -83,7 +83,7 @@ namespace TG.Common
             if (src == null) return GetDefault(destType);
             Type dicType = typeof(IDictionary);
             Type lstType = typeof(IList);
-            object result = Activator.CreateInstance(destType);
+            object? result = Activator.CreateInstance(destType);
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(destType))
             {
                 if (!property.IsReadOnly)
@@ -99,8 +99,9 @@ namespace TG.Common
                 }
                 else if (dicType.IsAssignableFrom(property.PropertyType))
                 {
-                    IDictionary srcDic = property.GetValue(src) as IDictionary;
-                    IDictionary destDic = property.GetValue(result) as IDictionary;
+                    IDictionary? srcDic = property.GetValue(src) as IDictionary;
+                    IDictionary? destDic = property.GetValue(result) as IDictionary;
+                    if (srcDic == null || destDic == null) continue;
                     if (deepClone)
                     {
                         foreach (DictionaryEntry item in srcDic)
@@ -121,8 +122,9 @@ namespace TG.Common
                 }
                 else if (lstType.IsAssignableFrom(property.PropertyType))
                 {
-                    IList srcLst = property.GetValue(src) as IList;
-                    IList destLst = property.GetValue(result) as IList;
+                    IList? srcLst = property.GetValue(src) as IList;
+                    IList? destLst = property.GetValue(result) as IList;
+                    if (srcLst == null || destLst == null) continue;
                     if (deepClone)
                     {
                         foreach (object item in srcLst)
@@ -152,7 +154,7 @@ namespace TG.Common
         {
 
             Delegate[] Dels = @delegate.GetInvocationList();
-            System.ComponentModel.ISynchronizeInvoke Synchronizer = null;
+            System.ComponentModel.ISynchronizeInvoke? Synchronizer = null;
 
             if (@delegate.Target != null && typeof(System.ComponentModel.ISynchronizeInvoke).IsAssignableFrom(@delegate.Target.GetType()))
             {

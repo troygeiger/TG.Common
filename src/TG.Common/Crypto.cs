@@ -10,7 +10,7 @@ namespace TG.Common
     /// </summary>
     public class Crypto : IDisposable
     {
-        private byte[] cryptKey;
+    private byte[]? cryptKey;
         // Legacy fixed IV used by older Rijndael implementation; retained for backward compatibility during fallback.
         private static readonly byte[] LegacyIv = new byte[] { 68, 65, 43, 114, 98, 118, 120, 103, 101, 79, 102, 107, 100, 111, 51, 33 };
 
@@ -47,14 +47,14 @@ namespace TG.Common
         /// Encrypts a byte array using AES-CBC. The returned payload is IV || CIPHERTEXT.
         /// </summary>
         /// <param name="bytes">A byte array to encrypt.</param>
-        /// <returns>Encrypted byte array, or null if the key is invalid.</returns>
+        /// <returns>Encrypted byte array.</returns>
         public byte[] Encrypt(byte[] bytes)
         {
             if (bytes == null) throw new ArgumentNullException(nameof(bytes));
             if (cryptKey == null)
-                return null;
+                throw new CryptographicException("Invalid key");
             if (cryptKey.Length < 32)
-                return null;
+                throw new CryptographicException("Invalid key length");
 
             byte[] iv = new byte[aes.BlockSize / 8]; // 16 bytes
             using (var rng = RandomNumberGenerator.Create())
@@ -110,9 +110,9 @@ namespace TG.Common
         {
             if (bytes == null) throw new ArgumentNullException(nameof(bytes));
             if (cryptKey == null)
-                return null;
+                throw new CryptographicException("Invalid key");
             if (cryptKey.Length < 32)
-                return null;
+                throw new CryptographicException("Invalid key length");
 
             // Try current AES format: first 16 bytes are IV
             try
@@ -196,8 +196,10 @@ namespace TG.Common
             aes?.Dispose();
             // Clear sensitive data
             if (cryptKey != null)
+            {
                 Array.Clear(cryptKey, 0, cryptKey.Length);
-            cryptKey = null;
+                cryptKey = null;
+            }
         }
     }
 }

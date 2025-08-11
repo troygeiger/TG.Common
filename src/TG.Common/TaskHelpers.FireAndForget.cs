@@ -13,7 +13,7 @@ namespace TG.Common
         /// </summary>
         /// <remarks>This property allows you to specify a global exception handler for fire-and-forget
         /// operations. Use this to log or process exceptions that would otherwise go unobserved.</remarks>
-        public static Action<Exception> DefaultSafeFireAndForgetExceptionHandler { get; set; }
+    public static Action<Exception>? DefaultSafeFireAndForgetExceptionHandler { get; set; }
 
         /// <summary>
         /// Executes a task without awaiting its completion, safely handling exceptions.
@@ -28,7 +28,7 @@ namespace TG.Common
         /// <param name="onException">An optional callback to handle exceptions thrown by the task. If provided, the callback is invoked with the
         /// exception as its argument. If <see langword="null"/>, exceptions are handled by the default exception
         /// handler, if configured.</param>
-        public static async void SafeFireAndForget(this Task task, bool continueOnCapturedContext = false, Action<Exception> onException = null)
+    public static async void SafeFireAndForget(this Task task, bool continueOnCapturedContext = false, Action<Exception>? onException = null)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace TG.Common
         /// langword="true"/> to preserve the synchronization context; otherwise, <see langword="false"/>.</param>
         /// <param name="onException">An optional callback to handle exceptions thrown by the task. If <see langword="null"/>, exceptions will
         /// only be passed to the default exception handler.</param>
-        public static async void SafeFireAndForget<T>(this Task<T> task, bool continueOnCapturedContext = false, Action<Exception> onException = null)
+    public static async void SafeFireAndForget<T>(this Task<T> task, bool continueOnCapturedContext = false, Action<Exception>? onException = null)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace TG.Common
         /// to preserve the synchronization context; otherwise, pass <see langword="false"/>.</param>
         /// <param name="onException">An optional callback to handle exceptions thrown during the execution of the task. If <see
         /// langword="null"/>, only the default exception handler will be invoked.</param>
-        public static async void SafeFireAndForget(this ValueTask task, bool continueOnCapturedContext = false, Action<Exception> onException = null)
+    public static async void SafeFireAndForget(this ValueTask task, bool continueOnCapturedContext = false, Action<Exception>? onException = null)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace TG.Common
         /// to continue on the captured context; otherwise, <see langword="false"/>.</param>
         /// <param name="onException">An optional callback to invoke if an exception occurs during the execution of the task. If <see
         /// langword="null"/>, no custom exception handling is performed.</param>
-        public static async void SafeFireAndForget<T>(this ValueTask<T> task, bool continueOnCapturedContext = false, Action<Exception> onException = null)
+    public static async void SafeFireAndForget<T>(this ValueTask<T> task, bool continueOnCapturedContext = false, Action<Exception>? onException = null)
         {
             try
             {

@@ -13,8 +13,8 @@ namespace TG.Common
     public static class LogManager
     {
         static bool initialized;
-        static string logPath;
-        static string logFolder;
+    static string? logPath;
+    static string? logFolder;
         static DateTime logDate;
         static object LogLock = new object();
 
@@ -54,13 +54,14 @@ namespace TG.Common
         /// Gets or sets the log file path in which the logs should be written
         /// to; including the file name.
         /// </summary>
-        public static string LogPath
+    public static string? LogPath
         {
             get { return logPath; }
             set
             {
                 logPath = value;
-                initialized = !string.IsNullOrEmpty(logPath) && Directory.Exists(Path.GetDirectoryName(logPath));
+        var dir = logPath != null ? Path.GetDirectoryName(logPath) : null;
+        initialized = !string.IsNullOrEmpty(logPath) && (dir != null && Directory.Exists(dir));
             }
         }
 
@@ -83,7 +84,7 @@ namespace TG.Common
         /// <param name="message">A message to include in the log.</param>
         /// <param name="exceptionMessage">Include an additional exception
         /// message below the message.</param>
-        public static void WriteToLog(string location, string message, string exceptionMessage = null)
+    public static void WriteToLog(string? location, string message, string? exceptionMessage = null)
         {
             lock (LogLock)
             {
@@ -97,18 +98,18 @@ namespace TG.Common
                 if (string.IsNullOrEmpty(location))
                 {
                     System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace();
-                    System.Reflection.MethodBase meth = null;
+                    System.Reflection.MethodBase? meth = null;
                     for (int i = 0; i < trace.FrameCount; i++)
                     {
                         meth = trace.GetFrame(i).GetMethod();
-                        if (meth.DeclaringType.Namespace != "TG.Common")//.Name != "WriteToLog" && meth.Name != "WriteExceptionToLog")
+                        if (meth?.DeclaringType?.Namespace != "TG.Common")//.Name != "WriteToLog" && meth.Name != "WriteExceptionToLog")
                             break;
                     }
 
-                    location = meth.DeclaringType.FullName + "." + meth.Name;
+                    location = meth?.DeclaringType?.FullName + "." + meth?.Name;
 
                 }
-                message = string.Format("[{0}] <{1}>: {2}", new object[] { DateTime.Now.ToString(), location, message });
+                message = string.Format("[{0}] <{1}>: {2}", new object[] { DateTime.Now.ToString(), location ?? "Unknown", message });
                 Console.ForegroundColor = ConsoleColor.White;
                 bool isException = !string.IsNullOrEmpty(exceptionMessage);
                 if (isException) message += "\r\n>>" + exceptionMessage;
@@ -126,7 +127,8 @@ namespace TG.Common
 
                 try
                 {
-                    System.IO.File.AppendAllText(logPath, message + "\r\n");
+                    if (logPath != null)
+                        System.IO.File.AppendAllText(logPath, message + "\r\n");
                 }
                 catch (Exception)
                 {
@@ -142,7 +144,7 @@ namespace TG.Common
         /// <param name="location">Specify the location in the code in with the
         /// log entry references.</param>
         /// <param name="message">A message to include in the log.</param>
-        public static void WriteToLog(string location, string message)
+    public static void WriteToLog(string? location, string message)
         {
             WriteToLog(location, message, null);
         }
@@ -151,7 +153,7 @@ namespace TG.Common
         /// Writes an entry to the log file.
         /// </summary>
         /// <param name="message">A message to include in the log.</param>
-        public static void WriteToLog(string message)
+    public static void WriteToLog(string message)
         {
             WriteToLog(null, message, null);
         }
@@ -179,7 +181,7 @@ namespace TG.Common
         /// Writes an exception to the log file.
         /// </summary>
         /// <param name="exceptionMessage">A message to include in the log.</param>
-        public static void WriteExceptionToLog(string exceptionMessage)
+    public static void WriteExceptionToLog(string exceptionMessage)
         {
             WriteToLog(null, "Exception", exceptionMessage);
         }
@@ -188,7 +190,7 @@ namespace TG.Common
         /// Writes an exception to the log file.
         /// </summary>
         /// <param name="ex">The <see cref="Exception"/> to log.</param>
-        public static void WriteExceptionToLog(Exception ex)
+    public static void WriteExceptionToLog(Exception ex)
         {
             WriteExceptionToLog("Exception", ex);
         }
@@ -201,7 +203,9 @@ namespace TG.Common
         {
             try
             {
-                List<string> files = new List<string>(Directory.GetFiles(Path.GetDirectoryName(LogPath), "*.txt"));
+                var folder = LogPath != null ? Path.GetDirectoryName(LogPath) : null;
+                if (string.IsNullOrEmpty(folder)) return;
+                List<string> files = new List<string>(Directory.GetFiles(folder!, "*.txt"));
                 files.Sort((x, y) =>
                 {
                     DateTime xd, yd;
