@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;netstandard2.0;net6.0-windows;net20;net45;</TargetFrameworks>
+		<TargetFrameworks>netstandard2.1;netstandard2.0;net6.0;net6.0-windows;net20;net45;</TargetFrameworks>
 		<Description>A small library of useful methods.</Description>
 		<Copyright>Copyright © Troy Geiger 2022</Copyright>
 		<Authors>Troy Geiger</Authors>
 		<Company>Troy Geiger</Company>
-		<PackageProjectUrl>https://github.com/troygeiger/TG.Common</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/troygeiger/TG.Common</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
